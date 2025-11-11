@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicine Reminder with Sound</title>
+</head>
+<body style="font-family:sans-serif; text-align:center; padding:40px;">
+  <h2>💊 Medicine Reminder with Sound</h2>
+  <p>Click below to test notification with sound:</p>
+
+  <button id="notifyBtn" style="padding:12px 24px; font-size:16px;">Test Notification</button>
+
+  <!-- Include your custom sound -->
+  <audio id="notifySound" src="notification.mp3" preload="auto"></audio>
+
+  <script>
+    // Request permission for notifications
+    async function askPermission() {
+      if (!("Notification" in window)) {
+        alert("Your browser does not support notifications.");
+        return false;
+      }
+
+      let permission = Notification.permission;
+      if (permission === "default") {
+        permission = await Notification.requestPermission();
+      }
+      return permission === "granted";
+    }
+
+    // Function to show notification + play sound
+    async function showMedicineNotification(name, time) {
+      const granted = await askPermission();
+      if (!granted) {
+        alert("Please enable notifications to use this feature.");
+        return;
+      }
+
+      // Play sound
+      const sound = document.getElementById("notifySound");
+      sound.currentTime = 0;
+      sound.play().catch((err) => {
+        console.warn("Sound playback blocked until user interaction:", err);
+      });
+
+      // Show notification
+      const notification = new Notification("💊 Medicine Reminder", {
+        body: `Time to take your ${name} (${time})`,
+        icon: "https://cdn-icons-png.flaticon.com/512/2966/2966484.png",
+        vibrate: [200, 100, 200],
+        requireInteraction: true // stays until user closes
+      });
+
+      // When clicked, focus the page
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+      };
+    }
+
+    // Button event listener for test
+    document.getElementById("notifyBtn").addEventListener("click", () => {
+      // Example values
+      showMedicineNotification("Paracetamol", "10:30 AM");
+    });
+  </script>
+</body>
+</html>
