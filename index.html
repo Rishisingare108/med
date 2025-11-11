@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Medicine Reminder</title>
+<link rel="icon" href="https://tse1.mm.bing.net/th/id/OIP.m9RXrOjZgVQLPlBgxaNueAHaHa?pid=Api&P=0&h=180">
+<style>
+body {
+  margin: 0; font-family: Poppins, sans-serif; 
+  background: #eef4ff; display: flex; justify-content: center; align-items: center; height: 100vh;
+}
+.card {
+  background: #fff; padding: 30px; border-radius: 10px; width: 350px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  text-align: center;
+}
+.logo { width: 90px; margin-bottom: 15px; border-radius: 50%; }
+input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; }
+button {
+  width: 100%; padding: 12px; border: none; border-radius: 8px; background:#3b82f6; color: white; font-size:16px; cursor:pointer;
+}
+.skip { margin-top: 10px; background:#6b7280 !important; }
+</style>
+</head>
+<body>
+
+<div class="card">
+<img class="logo" src="https://tse1.mm.bing.net/th/id/OIP.m9RXrOjZgVQLPlBgxaNueAHaHa?pid=Api&P=0&h=180" />
+<h2>Welcome</h2>
+<p>Sign in to continue</p>
+
+<input id="name" placeholder="Your Name" />
+<button onclick="login()">Sign In</button>
+<button class="skip" onclick="skip()">Skip Login</button>
+</div>
+<button id="install-btn" style="display:none;">Install App</button>
+
+<script>
+function login() {
+  const name = document.getElementById("name").value.trim();
+  if (!name) return alert("Enter name");
+  localStorage.setItem("username", name);
+  window.location = "home.html";
+}
+function skip() {
+  localStorage.setItem("username", "Guest");
+  window.location = "home.html";
+}
+</script>
+
+</body>
+</html>

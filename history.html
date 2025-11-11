@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
+
+<title>History</title>
+<link rel="icon" href="https://tse1.mm.bing.net/th/id/OIP.m9RXrOjZgVQLPlBgxaNueAHaHa?pid=Api&P=0&h=180">
+<style>
+body{font-family:Poppins;background:#f1f5f9;margin:0;}
+nav{background:#2563eb;color:white;padding:10px;display:flex;align-items:center;}
+.logo{width:40px;border-radius:50%;margin-right:10px;}
+.container{padding:20px;}
+.item{
+  background:white;padding:10px;margin:8px 0;border-radius:8px;
+  border-left:6px solid;
+}
+.taken{border-color:green;}
+.skipped{border-color:red;}
+</style>
+</head>
+<body>
+
+<nav>
+<img class="logo" src="https://tse1.mm.bing.net/th/id/OIP.m9RXrOjZgVQLPlBgxaNueAHaHa?pid=Api&P=0&h=180" />
+<div>History</div>
+</nav>
+
+<div class="container" id="history"></div>
+
+<script>
+const h = JSON.parse(localStorage.getItem("history")||"[]");
+document.getElementById("history").innerHTML = 
+  h.map(x => `<div class="item ${x.status}">
+     <b>${x.name}</b><br>
+     ${x.time} — <span style="text-transform:capitalize">${x.status}</span>
+  </div>`).join("");
+</script>
+</body>
+</html>

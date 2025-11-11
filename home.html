@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medicine Reminder</title>
+<link rel="icon" href="https://tse1.mm.bing.net/th/id/OIP.m9RXrOjZgVQLPlBgxaNueAHaHa?pid=Api&P=0&h=180">
+<style>
+body { margin:0; font-family:Poppins; background:#f8fafc; }
+nav {
+  background:#2563eb; color:#fff; padding:12px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.logo { width:40px; border-radius:50%; }
+.container { padding:20px; max-width:450px; margin:auto; }
+
+input,button {
+  width:100%; padding:12px; border-radius:8px; margin-top:8px;
+  border:1px solid #ccc; font-size:16px;
+}
+button { background:#2563eb; color:#fff; border:none; cursor:pointer; }
+button:hover { opacity:0.9; }
+ul{list-style:none;padding:0;margin-top:10px;}
+li{background:#fff;padding:10px;border-radius:8px;margin:6px 0; display:flex;justify-content:space-between;}
+a { text-decoration:none;color:white;margin-left:10px;font-size:14px; }
+</style>
+</head>
+
+<body>
+
+<nav>
+<img class="logo" src="https://tse1.mm.bing.net/th/id/OIP.m9RXrOjZgVQLPlBgxaNueAHaHa?pid=Api&P=0&h=180" />
+<div>Medicine Reminder</div>
+<div><a href="history.html">History</a></div>
+</nav>
+
+<div class="container">
+<h3 id="greet"></h3>
+
+<input id="med" placeholder="Medicine Name">
+<input id="time" type="time">
+
+<button onclick="addMed()">Add Reminder</button>
+
+<h3>Your Reminders</h3>
+<ul id="list"></ul>
+</div>
+
+<script src="script.js"></script>
+<script>
+document.getElementById("greet").innerText =
+ "Hello, " + (localStorage.getItem("username") || "Guest");
+</script>
+</body>
+</html>
