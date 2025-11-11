@@ -1,40 +1,188 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2563eb">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicine Reminder - History</title>
+  <link rel="icon" href="https://tse1.mm.bing.net/th/id/OIP.m9RXrOjZgVQLPlBgxaNueAHaHa?pid=Api&P=0&h=180" />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+    }
 
-<title>History</title>
-<link rel="icon" href="https://tse1.mm.bing.net/th/id/OIP.m9RXrOjZgVQLPlBgxaNueAHaHa?pid=Api&P=0&h=180">
-<style>
-body{font-family:Poppins;background:#f1f5f9;margin:0;}
-nav{background:#2563eb;color:white;padding:10px;display:flex;align-items:center;}
-.logo{width:40px;border-radius:50%;margin-right:10px;}
-.container{padding:20px;}
-.item{
-  background:white;padding:10px;margin:8px 0;border-radius:8px;
-  border-left:6px solid;
-}
-.taken{border-color:green;}
-.skipped{border-color:red;}
-</style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--text);
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      width: 100%;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .logo-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    main {
+      width: 100%;
+      max-width: 800px;
+      padding: 1rem;
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .history-card {
+      background: var(--card);
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 1rem 1.5rem;
+      margin-bottom: 1rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .history-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+
+    .medicine-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .status {
+      font-weight: 500;
+      margin-top: 0.5rem;
+    }
+
+    .taken {
+      color: #16a34a;
+    }
+
+    .skipped {
+      color: #dc2626;
+    }
+
+    .time {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+
+    .clear-btn {
+      margin-top: 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .clear-btn:hover {
+      background: #1e40af;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.25rem;
+      }
+      main {
+        padding: 0.75rem;
+      }
+      .history-card {
+        padding: 1rem;
+      }
+      .medicine-name {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <div class="logo-title">
+      <img src="https://tse1.mm.bing.net/th/id/OIP.m9RXrOjZgVQLPlBgxaNueAHaHa?pid=Api&P=0&h=180" alt="Logo">
+      <h1>Medicine Reminder</h1>
+    </div>
+    <a href="home.html" style="color:white;text-decoration:none;font-weight:500;">🏠 Home</a>
+  </header>
 
-<nav>
-<img class="logo" src="https://tse1.mm.bing.net/th/id/OIP.m9RXrOjZgVQLPlBgxaNueAHaHa?pid=Api&P=0&h=180" />
-<div>History</div>
-</nav>
+  <main>
+    <h2 style="margin-bottom:1rem;">Medicine History</h2>
+    <div id="historyList"></div>
+    <button class="clear-btn" onclick="clearHistory()">Clear History</button>
+  </main>
 
-<div class="container" id="history"></div>
+  <script>
+    // Load history from localStorage
+    const historyData = JSON.parse(localStorage.getItem('history')) || [];
 
-<script>
-const h = JSON.parse(localStorage.getItem("history")||"[]");
-document.getElementById("history").innerHTML = 
-  h.map(x => `<div class="item ${x.status}">
-     <b>${x.name}</b><br>
-     ${x.time} — <span style="text-transform:capitalize">${x.status}</span>
-  </div>`).join("");
-</script>
+    const list = document.getElementById('historyList');
+
+    if (historyData.length === 0) {
+      list.innerHTML = '<p style="color:#64748b;">No history records yet.</p>';
+    } else {
+      historyData.reverse().forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-card';
+        div.innerHTML = `
+          <div class="medicine-name">${item.name}</div>
+          <div class="status ${item.status}">Status: ${item.status.toUpperCase()}</div>
+          <div class="time">Time: ${item.time}</div>
+          <div class="time">Recorded at: ${new Date(item.when).toLocaleString()}</div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function clearHistory() {
+      if (confirm('Are you sure you want to clear all history?')) {
+        localStorage.removeItem('history');
+        location.reload();
+      }
+    }
+  </script>
 </body>
 </html>
