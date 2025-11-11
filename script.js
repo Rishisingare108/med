@@ -40,19 +40,41 @@ function schedule(m){
   setTimeout(()=> notify(m), at-now);
 }
 
-function notify(m){
- navigator.serviceWorker.ready.then(r=>{
-   r.showNotification("Medicine Reminder",{
-     body:`Take ${m.name}`,
-     icon:"data:image/jpeg;base64,/9j/4AAQSk...",
-     actions:[
-       {action:"take",title:"✅ Taken"},
-       {action:"skip",title:"⏰ Skip"}
-     ],
-     data:m
-   });
- });
+let canPlaySound = false;
+const notifySound = new Audio("notification.mp3");
+
+// enable sound after any user click
+document.body.addEventListener("click", () => {
+  notifySound.play().catch(()=>{}); // attempt to unlock
+  notifySound.pause();
+  notifySound.currentTime = 0;
+  canPlaySound = true;
+}, { once: true });
+
+// enhanced notify function
+function notify(m) {
+  // play custom sound if permitted
+  if (canPlaySound) {
+    notifySound.currentTime = 0;
+    notifySound.play().catch(err => console.warn("Cannot play sound:", err));
+  }
+
+  navigator.serviceWorker.ready.then(r => {
+    r.showNotification("💊 Medicine Reminder", {
+      body: `Time to take ${m.name}`,
+      icon: "https://cdn-icons-png.flaticon.com/512/2966/2966484.png",
+      actions: [
+        { action: "take", title: "✅ Taken" },
+        { action: "skip", title: "⏰ Skip" }
+      ],
+      data: m,
+      requireInteraction: true,
+      vibrate: [200, 100, 200],
+      badge: "https://cdn-icons-png.flaticon.com/512/2966/2966484.png"
+    });
+  });
 }
+
 
 // listen SW
 navigator.serviceWorker.onmessage = e=>{
